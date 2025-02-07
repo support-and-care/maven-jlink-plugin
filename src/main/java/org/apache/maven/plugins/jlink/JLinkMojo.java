@@ -505,8 +505,12 @@ public class JLinkMojo extends AbstractJLinkMojo {
                     throw new MojoFailureException(message);
                 }
 
-                // Don't warn for automatic modules, let the jlink tool do that
-                getLog().debug(" module: " + descriptor.name() + " automatic: " + descriptor.isAutomatic());
+                // Filter out automatic modules
+                if (descriptor.isAutomatic()) {
+                    getLog().debug("Ignoring automatic module: " + descriptor.name());
+                    continue;
+                }
+
                 if (modulepathElements.containsKey(descriptor.name())) {
                     getLog().warn("The module name " + descriptor.name() + " does already exists.");
                 }
@@ -530,6 +534,12 @@ public class JLinkMojo extends AbstractJLinkMojo {
                         getLog().error(message);
                         throw new MojoFailureException(message);
                     }
+
+                    if (descriptor.isAutomatic()) {
+                        getLog().debug("Ignoring automatic module: " + descriptor.name());
+                        continue;
+                    }
+
                     if (modulepathElements.containsKey(descriptor.name())) {
                         getLog().warn("The module name " + descriptor.name() + " does already exists.");
                     }
