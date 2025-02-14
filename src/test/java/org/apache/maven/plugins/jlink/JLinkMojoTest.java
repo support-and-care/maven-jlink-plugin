@@ -31,7 +31,6 @@ import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 import org.apache.maven.shared.utils.cli.Commandline;
 import org.apache.maven.toolchain.ToolchainManager;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.codehaus.plexus.languages.java.jpms.JavaModuleDescriptor;
 import org.codehaus.plexus.languages.java.jpms.LocationManager;
 import org.codehaus.plexus.languages.java.jpms.ResolvePathsRequest;
@@ -41,11 +40,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
 
 public class JLinkMojoTest {
 
@@ -125,7 +126,8 @@ public class JLinkMojoTest {
         when(moduleDescriptor.isAutomatic()).thenReturn(false);
 
         ResolvePathsResult<File> resolvePathsResult = mock(ResolvePathsResult.class);
-        when(resolvePathsResult.getPathElements()).thenReturn(Collections.singletonMap(new File("target/test-classes/dependency.jar"), moduleDescriptor));
+        when(resolvePathsResult.getPathElements())
+                .thenReturn(Collections.singletonMap(new File("target/test-classes/dependency.jar"), moduleDescriptor));
         when(locationManager.resolvePaths(any(ResolvePathsRequest.class))).thenReturn(resolvePathsResult);
 
         Field projectField = mojo.getClass().getSuperclass().getDeclaredField("project");
@@ -166,10 +168,10 @@ public class JLinkMojoTest {
         when(moduleDescriptor2.isAutomatic()).thenReturn(true);
 
         ResolvePathsResult<File> resolvePathsResult = mock(ResolvePathsResult.class);
-        when(resolvePathsResult.getPathElements()).thenReturn(Map.of(
-                new File("target/test-classes/dependency1.jar"), moduleDescriptor1,
-                new File("target/test-classes/dependency2.jar"), moduleDescriptor2
-        ));
+        when(resolvePathsResult.getPathElements())
+                .thenReturn(Map.of(
+                        new File("target/test-classes/dependency1.jar"), moduleDescriptor1,
+                        new File("target/test-classes/dependency2.jar"), moduleDescriptor2));
 
         when(locationManager.resolvePaths(any(ResolvePathsRequest.class))).thenReturn(resolvePathsResult);
 
