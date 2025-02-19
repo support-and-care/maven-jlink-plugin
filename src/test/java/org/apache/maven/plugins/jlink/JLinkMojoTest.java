@@ -20,6 +20,7 @@ package org.apache.maven.plugins.jlink;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +139,12 @@ public class JLinkMojoTest {
         outputDirectoryField.setAccessible(true);
         outputDirectoryField.set(mojo, outputDirectory);
 
-        Map<String, File> modulePathElements = mojo.getModulePathElements();
+        // Use reflection to access the private method
+        Method method = JLinkMojo.class.getDeclaredMethod("getModulePathElements");
+        method.setAccessible(true);
+
+        @SuppressWarnings("unchecked")
+        Map<String, File> modulePathElements = (Map<String, File>) method.invoke(mojo);
 
         assertThat(modulePathElements).hasSize(1);
         assertThat(modulePathElements).containsKey("test.module");
@@ -183,7 +189,12 @@ public class JLinkMojoTest {
         outputDirectoryField.setAccessible(true);
         outputDirectoryField.set(mojo, outputDirectory);
 
-        Map<String, File> modulePathElements = mojo.getModulePathElements();
+        // Use reflection to access the private method
+        Method method = JLinkMojo.class.getDeclaredMethod("getModulePathElements");
+        method.setAccessible(true);
+
+        @SuppressWarnings("unchecked")
+        Map<String, File> modulePathElements = (Map<String, File>) method.invoke(mojo);
 
         assertThat(modulePathElements).hasSize(1);
         assertThat(modulePathElements).containsKey("valid.module");
